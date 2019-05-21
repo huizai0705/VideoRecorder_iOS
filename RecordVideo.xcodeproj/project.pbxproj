@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		392B0B60229420E800BA5190 /* video.gif in Resources */ = {isa = PBXBuildFile; fileRef = 392B0B5F229420E700BA5190 /* video.gif */; };
 		3930A553228BB95E0002A151 /* YHHelp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3930A552228BB95E0002A151 /* YHHelp.m */; };
-		3930A559228BEBD80002A151 /* video.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3930A558228BEBD80002A151 /* video.gif */; };
 		3944E04D2293E2370068F548 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3944E0442293E2370068F548 /* SVIndefiniteAnimatedView.m */; };
 		3944E04E2293E2370068F548 /* SVProgressAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3944E0462293E2370068F548 /* SVProgressAnimatedView.m */; };
 		3944E04F2293E2370068F548 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3944E0482293E2370068F548 /* SVProgressHUD.bundle */; };
@@ -201,9 +201,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		392B0B5F229420E700BA5190 /* video.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = video.gif; sourceTree = "<group>"; };
 		3930A551228BB95E0002A151 /* YHHelp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YHHelp.h; sourceTree = "<group>"; };
 		3930A552228BB95E0002A151 /* YHHelp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YHHelp.m; sourceTree = "<group>"; };
-		3930A558228BEBD80002A151 /* video.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = video.gif; path = ../../../video.gif; sourceTree = "<group>"; };
 		3944E0432293E2370068F548 /* SVIndefiniteAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVIndefiniteAnimatedView.h; sourceTree = "<group>"; };
 		3944E0442293E2370068F548 /* SVIndefiniteAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVIndefiniteAnimatedView.m; sourceTree = "<group>"; };
 		3944E0452293E2370068F548 /* SVProgressAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressAnimatedView.h; sourceTree = "<group>"; };
@@ -593,10 +593,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3930A554228BE5770002A151 /* Source */ = {
+		392B0B5E229420E700BA5190 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				3930A558228BEBD80002A151 /* video.gif */,
+				392B0B5F229420E700BA5190 /* video.gif */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -649,8 +649,8 @@
 			isa = PBXGroup;
 			children = (
 				3944E0522293F9F00068F548 /* Help */,
+				392B0B5E229420E700BA5190 /* Source */,
 				3944E0422293E2370068F548 /* SVProgressHUD */,
-				3930A554228BE5770002A151 /* Source */,
 				398FE227228AACBF0095AAD0 /* GPUImage */,
 				398FDFFD228A9F6D0095AAD0 /* AppDelegate.h */,
 				398FDFFE228A9F6D0095AAD0 /* AppDelegate.m */,
@@ -1116,8 +1116,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				392B0B60229420E800BA5190 /* video.gif in Resources */,
 				3944E04F2293E2370068F548 /* SVProgressHUD.bundle in Resources */,
-				3930A559228BEBD80002A151 /* video.gif in Resources */,
 				398FE017228AA1430095AAD0 /* YHVideoRecordVC.xib in Resources */,
 				398FE01C228AA1670095AAD0 /* YHVideoPlayVC.xib in Resources */,
 				398FE00A228A9F6E0095AAD0 /* LaunchScreen.storyboard in Resources */,
