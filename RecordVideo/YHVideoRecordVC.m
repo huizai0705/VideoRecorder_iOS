@@ -176,7 +176,7 @@ typedef NS_ENUM(NSInteger, TypeFilter) {
     [YHToastHUD showToast:@"开始录制"];
     videoIndex = 1;
     //清除文件 创建目录
-    [YHHelp video_file_clear];
+    video_file_clear();
     create_video_dir();
     [self initMovieWriter:videoIndex];
     [self startRecord];
@@ -480,7 +480,7 @@ typedef NS_ENUM(NSInteger, TypeFilter) {
     }];
 }
 
-#pragma mark 通过视频的URL，获得视频缩略图
+#pragma mark 通过视频的URL，获得视频缩
 -(UIImage *)getImage:(NSString *)videoURL
 {
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoURL] options:nil];

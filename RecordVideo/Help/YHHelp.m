@@ -34,7 +34,7 @@
     return imageArray;
 }
 
-+(void)video_file_clear{
+void video_file_clear(void){
     NSString *path = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:@"Video"];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];

@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface YHHelp : NSObject
 +(NSMutableArray*)changeGifToImage:(NSData*)gifData;
-+(void)video_file_clear;
+void video_file_clear(void);
 NSString *create_video_dir(void);
 NSString *video_file_url(NSString *file);
 @end
