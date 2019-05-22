@@ -153,16 +153,13 @@ typedef NS_ENUM(NSInteger, TypeFilter) {
 - (void)pauseCamera:(NSNotification *)notifi
 {
     if (_isRecoding == YES) {
-        [self actionPauseRecord:nil];
-        if (videoCamera) {
-            [videoCamera stopCameraCapture];
-        }
+        [self endRecord];
     }
 }
 
 - (void)startCamera:(NSNotification *)notifi
 {
-    [self startRecord];
+   
 }
 
 #pragma mark action
