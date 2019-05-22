@@ -91,7 +91,7 @@ typedef NS_ENUM(NSInteger, TypeFilter) {
     
     /////////////////////////////高斯
     gaussBlurFilter = [[GPUImageGaussianBlurFilter alloc]init];
-    gaussBlurFilter.texelSpacingMultiplier = 5;
+    gaussBlurFilter.texelSpacingMultiplier = 4;
     gaussBlurFilter.blurRadiusInPixels = 5;
     
     
