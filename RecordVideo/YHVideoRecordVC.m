@@ -14,6 +14,8 @@
 #import "YHGPUImageBeautifyFilter.h"
 #import "YHHelp.h"
 #import "YHToastHUD.h"
+#import "GPUImageVideoCamera.h"
+#import "YHRecordTools.h"
 
 typedef NS_ENUM(NSInteger, CameraManagerDevicePosition) {
     CameraManagerDevicePositionBack,
@@ -30,7 +32,7 @@ typedef NS_ENUM(NSInteger, TypeFilter) {
 
 
 @interface YHVideoRecordVC ()<GPUImageVideoCameraDelegate>{
-    GPUImageVideoCamera              *videoCamera;
+    GPUImageVideoCamera             *videoCamera;
     GPUImageMovieWriter              *movieWriter;
     GPUImageOutput<GPUImageInput>    *filter;
     GPUImageGaussianBlurFilter       *gaussBlurFilter;
@@ -110,7 +112,6 @@ typedef NS_ENUM(NSInteger, TypeFilter) {
     UIImageView * imageV = [[UIImageView alloc]initWithFrame:CGRectMake(80, 0, 100, 80)];
     imageV.image = arrImage[0];
     
-    
     //创建滤镜 GPUImageDissolveBlendFilter
     gifFilter = [[GPUImageAlphaBlendFilter alloc] init];
     // GPUImageGaussianBlurFilter *filter = [[GPUImageGaussianBlurFilter alloc] init];
@@ -147,6 +148,7 @@ typedef NS_ENUM(NSInteger, TypeFilter) {
         }
         [weakElement update];
     }];
+    
 }
 
 #pragma mark noti
@@ -228,6 +230,7 @@ typedef NS_ENUM(NSInteger, TypeFilter) {
 
 - (IBAction)filterN:(id)sender {
     self.typeFilter = filterNone;
+   // [self mergeAndExportVideos:@[video_file_url(@"h264.264")] withOutPath:video_file_url(@"aaaa")];
 }
 
 - (IBAction)actionChangeVPosition:(id)sender {
@@ -321,11 +324,6 @@ typedef NS_ENUM(NSInteger, TypeFilter) {
     }
 }
 
-- (CVPixelBufferRef)didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
-{
-    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    return pixelBuffer;
-}
 
 
 - (void)initMovieWriter:(int)index{

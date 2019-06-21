@@ -13,6 +13,7 @@
 #import "ViewController.h"
 #import "YHVideoPlayVC.h"
 #import "YHVideoRecordVC.h"
+#import "YHFFmpegRecordVC.h"
 
 @interface ViewController ()
 
@@ -32,6 +33,11 @@
 
 - (IBAction)actionGoPlay:(id)sender {
     YHVideoPlayVC * vc = [YHVideoPlayVC new];
+    [self presentViewController:vc animated:YES completion:nil];
+}
+- (IBAction)actionTest:(UIButton *)sender {
+
+    YHFFmpegRecordVC * vc = [YHFFmpegRecordVC new];
     [self presentViewController:vc animated:YES completion:nil];
 }
 

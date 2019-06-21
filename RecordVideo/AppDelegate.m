@@ -23,7 +23,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    
     [SVProgressHUD setDefaultStyle:SVProgressHUDStyleLight];
     [SVProgressHUD setImageViewSize:CGSizeMake(28, 28)];
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
