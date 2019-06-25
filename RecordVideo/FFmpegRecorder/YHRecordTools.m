@@ -16,7 +16,7 @@
 #define stride(wid) ((wid % 16 != 0) ? ((wid) + 16 - (wid) % 16): (wid))
 @implementation YHRecordTools
 
-+ (BOOL) WriteVideoData:(uint8_t *)rawBytesForImage andSize:(CGSize)imageSize withRecord:(YHAVRecord*)recorder withPTS:(int64_t)pts{
++ (BOOL) WriteVideoData:(uint8_t *)rawBytesForImage andSize:(CGSize)imageSize withRecord:(YHBaseRecord*)recorder withPTS:(int64_t)pts{
     //将bgra转为yuv
     //图像宽度
     int width = stride((int)imageSize.width);
@@ -31,13 +31,17 @@
     ARGBToNV12(rawBytesForImage, width * 4, y_bytes, width, uv_bytes, width, width, height);
     if (![recorder copyVideo: y_bytes withUV:uv_bytes withYSize:w_x_h withUVSize:w_x_h/2]) {
         NSLog(@"copy video buffer failed");
+        free(y_bytes);
+        free(uv_bytes);
         return FALSE;
     }
+    free(y_bytes);
+    free(uv_bytes);
     return [recorder writeVideo: pts];
 }
 
 
-+ (BOOL) WriteVideoData:(CVPixelBufferRef) pixelBuffer withRecord:(YHAVRecord*) recorder withPTS:(int64_t)pts {
++ (BOOL) WriteVideoData:(CVPixelBufferRef) pixelBuffer withRecord:(YHBaseRecord*) recorder withPTS:(int64_t)pts {
     if (CVPixelBufferLockBaseAddress(pixelBuffer, 0) == kCVReturnSuccess) {
         int pixelFormat = CVPixelBufferGetPixelFormatType(pixelBuffer);
         switch (pixelFormat) {
@@ -46,7 +50,7 @@
             default: {
                 NSString *log = [NSString stringWithFormat: @"pixel format unknown %d",
                                  pixelFormat];
-                NSLog(log);
+                NSLog( @"%@",log);
             }
                 CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
                 return FALSE;
@@ -59,11 +63,12 @@
         int uvBs = (int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 1) * (rows / 2);
         if (![recorder copyVideo: pY withUV: pUV withYSize: yBs withUVSize: uvBs]) {
             CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+            CVPixelBufferRelease(pixelBuffer);
             NSLog(@"copy video buffer failed");
             return FALSE;
         }
         CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
-        
+        CVPixelBufferRelease(pixelBuffer);
         return [recorder writeVideo: pts];
     } else {
         NSLog(@"lock pixel buffer failed");
@@ -71,7 +76,7 @@
     }
 }
 
-+ (BOOL) WriteAudioData:(CMSampleBufferRef) sampleBuffer withRecord:(YHAVRecord*) recorder {
++ (BOOL) WriteAudioData:(CMSampleBufferRef) sampleBuffer withRecord:(YHBaseRecord*) recorder {
     size_t _pcmBufferSize = 0;
     char* _pcmBuffer = NULL;
     
@@ -88,7 +93,7 @@
             error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
             NSString *log = [NSString stringWithFormat: @"get data pointer error: %@",
                              NSError.description];
-            NSLog( log);
+            NSLog( @"%@",log);
             CFRelease(blockBuffer);
         } else {
             int numFrames = (int)

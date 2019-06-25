@@ -35,36 +35,36 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ocO-JY-p4I">
-                    <rect key="frame" x="34" y="486.5" width="70" height="30"/>
+                    <rect key="frame" x="34" y="506.5" width="77" height="30"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="70" id="aGU-9h-szu"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="aGU-9h-szu"/>
                         <constraint firstAttribute="height" constant="30" id="x8C-bf-ioA"/>
                     </constraints>
-                    <state key="normal" title="开始录制"/>
+                    <state key="normal" title="老接口录制"/>
                     <connections>
                         <action selector="actionStartRecord:" destination="-1" eventType="touchUpInside" id="44f-Jv-rSn"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7w-wS-yyt">
-                    <rect key="frame" x="172" y="486.5" width="70" height="30"/>
+                    <rect key="frame" x="168.5" y="506.5" width="77" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="FJu-FZ-Ctg"/>
-                        <constraint firstAttribute="width" constant="70" id="ygk-8k-bXN"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="ygk-8k-bXN"/>
                     </constraints>
-                    <state key="normal" title="暂停录制"/>
+                    <state key="normal" title="新接口录制"/>
                     <connections>
-                        <action selector="actionPauseRecord:" destination="-1" eventType="touchUpInside" id="lEm-KS-TfO"/>
+                        <action selector="actionNewApiStartRecord:" destination="-1" eventType="touchUpInside" id="u2P-F3-zd4"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CJc-OJ-qLe">
-                    <rect key="frame" x="310" y="486.5" width="70" height="30"/>
+                    <rect key="frame" x="303" y="506.5" width="77" height="30"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="70" id="T0x-qe-hYa"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="T0x-qe-hYa"/>
                         <constraint firstAttribute="height" constant="30" id="VrD-BQ-rlo"/>
                     </constraints>
-                    <state key="normal" title="结束录制"/>
+                    <state key="normal" title="新接口推流"/>
                     <connections>
-                        <action selector="actionStopRecord:" destination="-1" eventType="touchUpInside" id="KKA-Ae-E9s"/>
+                        <action selector="actionPush:" destination="-1" eventType="touchUpInside" id="5Ms-G4-6ho"/>
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vmF-Zd-Fqh" customClass="GPUImageView">
@@ -82,18 +82,69 @@
                         <constraint firstAttribute="height" constant="3" id="X2p-yX-EIa"/>
                     </constraints>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tpw-wf-ghP">
+                    <rect key="frame" x="41.5" y="576.5" width="62" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="62" id="BnH-c2-xCk"/>
+                        <constraint firstAttribute="height" constant="30" id="PSC-j7-Utf"/>
+                    </constraints>
+                    <state key="normal" title="停止"/>
+                    <connections>
+                        <action selector="actionStopRecord:" destination="-1" eventType="touchUpInside" id="nUz-Jp-NEy"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mU4-OE-sI3">
+                    <rect key="frame" x="172" y="576.5" width="70" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="1as-oc-uNp"/>
+                        <constraint firstAttribute="width" constant="70" id="XyK-3r-eCi"/>
+                    </constraints>
+                    <state key="normal" title="添加滤镜"/>
+                    <connections>
+                        <action selector="actionAddFilter:" destination="-1" eventType="touchUpInside" id="6T4-c0-1kv"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mJb-18-Vij">
+                    <rect key="frame" x="306.5" y="576.5" width="70" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="RNH-9k-84k"/>
+                        <constraint firstAttribute="height" constant="30" id="stI-NB-oa9"/>
+                    </constraints>
+                    <state key="normal" title="去除滤镜"/>
+                    <connections>
+                        <action selector="actionRemoveFilter:" destination="-1" eventType="touchUpInside" id="hF2-yY-JAO"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="此处新接口老接口是指FFmpeg编码api" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wLl-iP-Z5i">
+                    <rect key="frame" x="20" y="467" width="260" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="F0t-gQ-UJF"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="187" id="Xld-rn-6gu"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="0.41171824930000001" green="0.41179221869999999" blue="0.41170781849999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="0.92147135729999996" green="0.92162615059999997" blue="0.92144966129999994" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="d7w-wS-yyt" firstAttribute="top" secondItem="ocO-JY-p4I" secondAttribute="top" id="3MA-ba-eCG"/>
-                <constraint firstItem="ocO-JY-p4I" firstAttribute="firstBaseline" secondItem="vmF-Zd-Fqh" secondAttribute="baseline" constant="60" id="5wZ-kd-fvZ"/>
+                <constraint firstItem="wLl-iP-Z5i" firstAttribute="top" secondItem="vmF-Zd-Fqh" secondAttribute="bottom" constant="20" id="4uo-1T-vGb"/>
+                <constraint firstItem="ocO-JY-p4I" firstAttribute="firstBaseline" secondItem="vmF-Zd-Fqh" secondAttribute="baseline" constant="80" id="5wZ-kd-fvZ"/>
+                <constraint firstItem="tpw-wf-ghP" firstAttribute="centerX" secondItem="ocO-JY-p4I" secondAttribute="centerX" id="7Ob-DV-Lor"/>
                 <constraint firstItem="vmF-Zd-Fqh" firstAttribute="trailing" secondItem="gAd-2Y-7UW" secondAttribute="trailing" id="7VC-Iv-Z0C"/>
                 <constraint firstItem="CJc-OJ-qLe" firstAttribute="top" secondItem="d7w-wS-yyt" secondAttribute="top" id="CGy-3M-SC4"/>
+                <constraint firstItem="wLl-iP-Z5i" firstAttribute="leading" secondItem="gAd-2Y-7UW" secondAttribute="leading" constant="20" id="CNx-hx-AMg"/>
                 <constraint firstItem="ocO-JY-p4I" firstAttribute="leading" secondItem="gAd-2Y-7UW" secondAttribute="leading" constant="34" id="ITI-XL-3xI"/>
+                <constraint firstItem="tpw-wf-ghP" firstAttribute="top" secondItem="mU4-OE-sI3" secondAttribute="top" id="Kgo-qI-MuN"/>
+                <constraint firstItem="mU4-OE-sI3" firstAttribute="top" secondItem="d7w-wS-yyt" secondAttribute="bottom" constant="40" id="QTo-Ql-Csq"/>
+                <constraint firstItem="mJb-18-Vij" firstAttribute="centerX" secondItem="CJc-OJ-qLe" secondAttribute="centerX" id="YGC-sQ-Ykz"/>
+                <constraint firstItem="mU4-OE-sI3" firstAttribute="centerX" secondItem="d7w-wS-yyt" secondAttribute="centerX" id="aSm-Kk-kWL"/>
                 <constraint firstItem="vmF-Zd-Fqh" firstAttribute="leading" secondItem="gAd-2Y-7UW" secondAttribute="leading" id="bij-DR-Yxl"/>
                 <constraint firstItem="k6b-0g-AeQ" firstAttribute="top" secondItem="gAd-2Y-7UW" secondAttribute="top" constant="39" id="bmd-lo-Nlb"/>
                 <constraint firstItem="gAd-2Y-7UW" firstAttribute="trailing" secondItem="CJc-OJ-qLe" secondAttribute="trailing" constant="34" id="cuL-og-hvJ"/>
                 <constraint firstItem="0wC-cZ-hKZ" firstAttribute="top" secondItem="gAd-2Y-7UW" secondAttribute="top" id="deA-T4-DBb"/>
+                <constraint firstItem="mJb-18-Vij" firstAttribute="centerY" secondItem="mU4-OE-sI3" secondAttribute="centerY" id="ie0-cz-no7"/>
                 <constraint firstItem="gAd-2Y-7UW" firstAttribute="trailing" secondItem="0wC-cZ-hKZ" secondAttribute="trailing" constant="10" id="rZf-qB-yFO"/>
                 <constraint firstItem="d7w-wS-yyt" firstAttribute="centerX" secondItem="gAd-2Y-7UW" secondAttribute="centerX" id="uJj-MF-RXc"/>
                 <constraint firstItem="vmF-Zd-Fqh" firstAttribute="top" secondItem="0wC-cZ-hKZ" secondAttribute="bottom" constant="10" id="uNf-Y2-xKK"/>

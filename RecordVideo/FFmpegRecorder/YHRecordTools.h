@@ -13,17 +13,18 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
+#import "YHNAVRecord.h"
 #import "YHAVRecord.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface YHRecordTools : NSObject
 
-+ (BOOL) WriteVideoData:(uint8_t *)rawBytesForImage andSize:(CGSize)imageSize withRecord:(YHAVRecord*)recorder withPTS:(int64_t)pts;
++ (BOOL) WriteVideoData:(uint8_t *)rawBytesForImage andSize:(CGSize)imageSize withRecord:(YHBaseRecord*)recorder withPTS:(int64_t)pts;
 
-+ (BOOL) WriteVideoData:(CVPixelBufferRef) pixelBuffer withRecord:(YHAVRecord*) recorder withPTS:(int64_t)pts;
++ (BOOL) WriteVideoData:(CVPixelBufferRef) pixelBuffer withRecord:(YHBaseRecord*) recorder withPTS:(int64_t)pts;
 
-+ (BOOL) WriteAudioData:(CMSampleBufferRef) pixelBuffer withRecord:(YHAVRecord*) recorder;
++ (BOOL) WriteAudioData:(CMSampleBufferRef) pixelBuffer withRecord:(YHBaseRecord*) recorder;
 
 @end
 

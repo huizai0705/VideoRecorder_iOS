@@ -1,16 +1,16 @@
 //
-//  YHtemp.h
+//  YHRtmpRecord.h
 //  RecordVideo
 //
-//  Created by huizai on 2019/5/17.
+//  Created by huizai on 2019/6/24.
 //  Copyright © 2019 huizai. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "YHBaseRecord.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface YHtemp : BYBaseViewController
+@interface YHRtmpRecord : YHBaseRecord
 
 @end
 

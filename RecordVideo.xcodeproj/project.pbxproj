@@ -28,6 +28,9 @@
 		3946A26C2297FE4600778119 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3946A26B2297FE4600778119 /* AudioToolbox.framework */; };
 		3946A26E2297FE5200778119 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3946A26D2297FE5200778119 /* VideoToolbox.framework */; };
 		3946A2712297FFEC00778119 /* YHRecordTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 3946A2702297FFEC00778119 /* YHRecordTools.m */; };
+		39476B9D22C0B8CD00F2967D /* YHNAVRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 39476B9C22C0B8CD00F2967D /* YHNAVRecord.m */; };
+		39476BA022C0B93100F2967D /* YHBaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 39476B9F22C0B93100F2967D /* YHBaseRecord.m */; };
+		39476BA322C0C16800F2967D /* YHRtmpRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 39476BA222C0C16800F2967D /* YHRtmpRecord.m */; };
 		398FDFFF228A9F6D0095AAD0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 398FDFFE228A9F6D0095AAD0 /* AppDelegate.m */; };
 		398FE002228A9F6D0095AAD0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 398FE001228A9F6D0095AAD0 /* ViewController.m */; };
 		398FE005228A9F6D0095AAD0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 398FE003228A9F6D0095AAD0 /* Main.storyboard */; };
@@ -274,6 +277,12 @@
 		3946A26D2297FE5200778119 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		3946A26F2297FFEC00778119 /* YHRecordTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YHRecordTools.h; sourceTree = "<group>"; };
 		3946A2702297FFEC00778119 /* YHRecordTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YHRecordTools.m; sourceTree = "<group>"; };
+		39476B9B22C0B8CD00F2967D /* YHNAVRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YHNAVRecord.h; sourceTree = "<group>"; };
+		39476B9C22C0B8CD00F2967D /* YHNAVRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YHNAVRecord.m; sourceTree = "<group>"; };
+		39476B9E22C0B93100F2967D /* YHBaseRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YHBaseRecord.h; sourceTree = "<group>"; };
+		39476B9F22C0B93100F2967D /* YHBaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YHBaseRecord.m; sourceTree = "<group>"; };
+		39476BA122C0C16800F2967D /* YHRtmpRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YHRtmpRecord.h; sourceTree = "<group>"; };
+		39476BA222C0C16800F2967D /* YHRtmpRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YHRtmpRecord.m; sourceTree = "<group>"; };
 		398FDFFA228A9F6D0095AAD0 /* RecordVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		398FDFFD228A9F6D0095AAD0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		398FDFFE228A9F6D0095AAD0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -902,8 +911,14 @@
 		3946A25C2297F3E500778119 /* FFmpegRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				39476B9E22C0B93100F2967D /* YHBaseRecord.h */,
+				39476B9F22C0B93100F2967D /* YHBaseRecord.m */,
 				3946A25D2297F41F00778119 /* YHAVRecord.h */,
 				3946A25E2297F41F00778119 /* YHAVRecord.m */,
+				39476B9B22C0B8CD00F2967D /* YHNAVRecord.h */,
+				39476B9C22C0B8CD00F2967D /* YHNAVRecord.m */,
+				39476BA122C0C16800F2967D /* YHRtmpRecord.h */,
+				39476BA222C0C16800F2967D /* YHRtmpRecord.m */,
 				3946A26F2297FFEC00778119 /* YHRecordTools.h */,
 				3946A2702297FFEC00778119 /* YHRecordTools.m */,
 			);
@@ -1744,6 +1759,7 @@
 				398FE3D8228AACC00095AAD0 /* GPUImageNonMaximumSuppressionFilter.m in Sources */,
 				398FE3C3228AACC00095AAD0 /* GPUImageKuwaharaFilter.m in Sources */,
 				398FE414228AACC00095AAD0 /* GPUImageBuffer.m in Sources */,
+				39476B9D22C0B8CD00F2967D /* YHNAVRecord.m in Sources */,
 				398FE421228AACC00095AAD0 /* GPUImageMovie.m in Sources */,
 				398FE3E7228AACC00095AAD0 /* GPUImageRGBClosingFilter.m in Sources */,
 				3930A553228BB95E0002A151 /* YHHelp.m in Sources */,
@@ -1755,6 +1771,7 @@
 				398FE3CE228AACC00095AAD0 /* GPUImageLuminanceThresholdFilter.m in Sources */,
 				398FE394228AACC00095AAD0 /* GPUImageClosingFilter.m in Sources */,
 				398FE3FC228AACC00095AAD0 /* GPUImageStretchDistortionFilter.m in Sources */,
+				39476BA322C0C16800F2967D /* YHRtmpRecord.m in Sources */,
 				398FE3A1228AACC00095AAD0 /* GPUImageDilationFilter.m in Sources */,
 				398FE3BD228AACC00095AAD0 /* GPUImageHistogramFilter.m in Sources */,
 				398FE423228AACC00095AAD0 /* GPUImageOutput.m in Sources */,
@@ -1784,6 +1801,7 @@
 				398FE3E1228AACC00095AAD0 /* GPUImagePixellatePositionFilter.m in Sources */,
 				3920073022BB860700249FAA /* YHFFmpegRecordVC.m in Sources */,
 				398FE390228AACC00095AAD0 /* GPUImageCannyEdgeDetectionFilter.m in Sources */,
+				39476BA022C0B93100F2967D /* YHBaseRecord.m in Sources */,
 				398FE3FF228AACC00095AAD0 /* GPUImageThreeInputFilter.m in Sources */,
 				398FE39A228AACC00095AAD0 /* GPUImageColorMatrixFilter.m in Sources */,
 				398FE398228AACC00095AAD0 /* GPUImageColorInvertFilter.m in Sources */,

@@ -1,5 +1,5 @@
 //
-//  YHAVRecord.m
+//  YHRtmpRecord.m
 //  RecordVideo
 //
 //  Created by huizai on 2019/5/24.
@@ -10,7 +10,8 @@
 //
 //
 
-#import "YHAVRecord.h"
+#import "YHRtmpRecord.h"
+#import "YHToastHUD.h"
 
 // enable/disable swresample usage
 #define USE_SWRESAMPLE      1
@@ -24,24 +25,11 @@ typedef enum AVCodecID AVCodecID;
 typedef enum AVPixelFormat AVPixelFormat;
 typedef enum AVMediaType AVMediaType;
 
-//const uint64_t YH_AV_CH_Layout_Selector[] =
-//{
-//    0
-//    ,AV_CH_LAYOUT_MONO
-//    ,AV_CH_LAYOUT_STEREO
-//    ,AV_CH_LAYOUT_2_1
-//    ,AV_CH_LAYOUT_3POINT1
-//    ,AV_CH_LAYOUT_5POINT0
-//    ,AV_CH_LAYOUT_5POINT1
-//    ,AV_CH_LAYOUT_7POINT0
-//    ,AV_CH_LAYOUT_7POINT1
-//};
 
-@implementation YHAVRecord
+@implementation YHRtmpRecord
 {
     const char * outFilePath;
     volatile BOOL running;
-    
     int audio_bitrate;     // kbit
     int audio_samplerate;  // HZ
     int audio_channels;
@@ -76,6 +64,9 @@ typedef enum AVMediaType AVMediaType;
     
     AVStream *audio_st;
     AVStream *video_st;
+    
+    AVCodecContext *ac;
+    AVCodecContext *vc;
     
     AVFormatContext *fmt_context;
     AVPixelFormat pixelformat;
@@ -133,6 +124,7 @@ typedef enum AVMediaType AVMediaType;
      all codecs and formats */
     av_register_all();
     avfilter_register_all();
+    avformat_network_init();
     
     return TRUE;
 }
@@ -149,6 +141,11 @@ typedef enum AVMediaType AVMediaType;
     if(running) {
         NSLog( @"recorder is running");
         return TRUE;
+    }
+    if (outPath == nil && outPath.length < 5) {
+        [YHToastHUD showToast:@"推流地址不正确" completion:^{
+        }];
+        return FALSE;
     }
     outFilePath  = [outPath UTF8String];
     if(width > 0 && width != video_width) {
@@ -178,25 +175,18 @@ typedef enum AVMediaType AVMediaType;
         [self stopRecordPrivate];
         return FALSE;
     }
-    
     running = TRUE;
     return TRUE;
 }
 
 - (void) stopRecordPrivate {
     
-    if(fmt_context && fmt_context->pb) {
-        NSLog( @"av_write_trailer");
-        // write the trailer
-        av_write_trailer(fmt_context);
-    }
-    
     [avcodecLock lock];
     if(audio_st) {
-        avcodec_close(audio_st->codec);
+        avcodec_close(ac);
     }
     if(video_st) {
-        avcodec_close(video_st->codec);
+        avcodec_close(vc);
     }
     [avcodecLock unlock];
     
@@ -264,7 +254,7 @@ typedef enum AVMediaType AVMediaType;
     
     // Allocate the output media context
     avformat_alloc_output_context2(&fmt_context, NULL,
-                                   "mp4", outFilePath);
+                                   "flv", outFilePath);
     if (!fmt_context) {
         NSLog( @"avformat_alloc_output_context2 failed");
         return FALSE;
@@ -339,7 +329,8 @@ typedef enum AVMediaType AVMediaType;
         return NULL;
     }
     st->id = fmt_context->nb_streams - 1;
-    c = st->codec;
+    c = avcodec_alloc_context3(codec);
+    avcodec_parameters_from_context(st->codecpar,c);
     c->codec = codec;
     
     if(codec_type == AVMEDIA_TYPE_AUDIO) {
@@ -359,6 +350,7 @@ typedef enum AVMediaType AVMediaType;
         c->channel_layout= YH_AV_CH_Layout_Selector[c->channels];
         st->time_base    = (AVRational){1, audio_samplerate};
         //c->time_base     = st->time_base;
+        ac = c;
     } else if(codec_type == AVMEDIA_TYPE_VIDEO) {
         c->pix_fmt       = pixelformat;
         c->codec_id      = codec->id;
@@ -375,6 +367,7 @@ typedef enum AVMediaType AVMediaType;
             av_opt_set(c->priv_data, "tune", "zerolatency", 0);
             c->max_b_frames = 0;
         }
+        vc = c;
     }
     
     // Some formats want stream headers to be separate
@@ -384,7 +377,7 @@ typedef enum AVMediaType AVMediaType;
 }
 
 - (BOOL) OpenAudio {
-    AVCodecContext *c = audio_st->codec;
+    AVCodecContext *c = ac;//audio_st->codec;
     int nb_samples = 0;
     int ret = 0;
     
@@ -393,7 +386,9 @@ typedef enum AVMediaType AVMediaType;
     ret = avcodec_open2(c, c->codec, NULL);
     [avcodecLock unlock];
     if(ret < 0) {
-        NSLog( @"could not open audio codec");
+        char err[1024] = { 0 };
+        av_strerror(ret, err, sizeof(err) - 1);
+        NSLog( @"could not open audio codec:%s",err);
         return FALSE;
     }
     
@@ -430,7 +425,7 @@ typedef enum AVMediaType AVMediaType;
         if(numFrames != src_samples) {
             NSString *log = [NSString stringWithFormat: @"samples error: %d_%d",
                              numFrames, src_samples];
-            NSLog(log);
+            NSLog(@"%@",log);
             return FALSE;
         }
         memcpy(src_samples_data[0], pcmBuffer, src_samples_size);
@@ -443,14 +438,13 @@ typedef enum AVMediaType AVMediaType;
         return FALSE;
     }
     
-    AVCodecContext *c = audio_st->codec;
-    int ret = 0, got_packet = 0;
+    AVCodecContext *c = ac;
+    int ret = 0;
     AVPacket pkt = { 0 };
     av_init_packet(&pkt);
     
     // first, increase the counter, set PTS for packet
     audio_frame->pts = audio_frame_count;
-    NSLog(@"-----------audio: %d",audio_frame_count/audio_samplerate);
     if(![self Resampler]) {
         NSLog( @"error while resampler");
         return FALSE;
@@ -459,21 +453,18 @@ typedef enum AVMediaType AVMediaType;
     audio_frame->nb_samples = dst_samples;
     avcodec_fill_audio_frame(audio_frame, c->channels, c->sample_fmt,
                              dst_samples_data[0], dst_samples_size, AV_ALIGN);
-    
-    ret = avcodec_encode_audio2(c, &pkt, audio_frame, &got_packet);
+    ret = avcodec_send_frame(ac, audio_frame);
+    if (ret != 0){
+        NSLog( @"error send_frame audio frame");
+        return FALSE;
+    }
+    ret = avcodec_receive_packet(ac, &pkt);
     if(ret < 0) {
-        NSLog( @"error encoding audio frame");
+        NSLog( @"error receive_packet audio frame");
         return FALSE;
     }
     
     audio_frame_count += numFrames;
-    
-    if(!got_packet) {
-        NSLog( @"encoding audio not ouptput");
-        av_packet_unref(&pkt);
-        return TRUE;
-    }
-    
     ret = [self WritePacket:audio_st withPacket:&pkt];
     av_packet_unref(&pkt);
     if(ret < 0) {
@@ -484,7 +475,7 @@ typedef enum AVMediaType AVMediaType;
 }
 
 - (BOOL) OpenVideo {
-    AVCodecContext *c = video_st->codec;
+    AVCodecContext *c = vc;//video_st->codec;
     AVDictionary *opt = NULL;
     int ret = 0;
     
@@ -544,9 +535,7 @@ typedef enum AVMediaType AVMediaType;
                 *pV++ = *pUV++;
             }
         }
-        
         video_frame->pts = video_frame_count;
-        NSLog(@"-----------video: %d",video_frame_count/video_framerate);
         return TRUE;
     }
 }
@@ -569,36 +558,34 @@ typedef enum AVMediaType AVMediaType;
             NSLog( @"error add frame to buffer src");
             return FALSE;
         }
-
+        
         if (av_buffersink_get_frame(buffersink_ctx, video_frame_filtered) < 0) {
             NSLog( @"error get frame");
             av_frame_unref(video_frame_filtered);
             return FALSE;
         }
-
-        AVCodecContext *c = video_st->codec;
-        int ret = 0, got_packet = 0;
+        
+        int ret = 0;
         AVPacket pkt = { 0 };
         av_init_packet(&pkt);
         
-       // ret = avcodec_encode_video2(c, &pkt, video_frame, &got_packet);
-        ret = avcodec_encode_video2(c, &pkt, video_frame_filtered, &got_packet);
+        ret = avcodec_send_frame(vc, video_frame_filtered);
+        if (ret != 0){
+            NSLog( @"error send_frame");
+        }
+        ret = avcodec_receive_packet(vc, &pkt);
         // if size is zero, it means the image was buffered
         if(ret < 0) {
-            NSString* errorinfo = [NSString stringWithFormat:@"error encoding video frame, ret : %d", ret];
-            NSLog(errorinfo);
+            NSString* errorinfo = [NSString stringWithFormat:@"error receive_packet video frame, ret : %d", ret];
+            char err[1024] = { 0 };
+            av_strerror(ret, err, sizeof(err) - 1);
+            NSLog( @"%@:%s",errorinfo,err);
             av_packet_unref(&pkt);
             av_frame_unref(video_frame_filtered);
             return FALSE;
         }
         
         video_frame_count++;
-        if(!got_packet) {
-            NSLog( @"encoding video not ouptput");
-            av_packet_unref(&pkt);
-            av_frame_unref(video_frame_filtered);
-            return TRUE;
-        }
         
         ret = [self WritePacket: video_st withPacket: &pkt];
         av_packet_unref(&pkt);
@@ -613,7 +600,7 @@ typedef enum AVMediaType AVMediaType;
 }
 
 - (BOOL) OpenResampler {
-    AVCodecContext *c = audio_st->codec;
+    AVCodecContext *c = ac;//audio_st->codec;
     int ret = 0;
     
     // check resampler
@@ -623,8 +610,8 @@ typedef enum AVMediaType AVMediaType;
     }
     
     // set frame size
-    if(c->frame_size == 0) {
-        c->frame_size = c->sample_rate * av_q2d(audio_st->codec->time_base);
+    if(c->frame_size == 0) {//audio_st->codec->time_base
+        c->frame_size = c->sample_rate * av_q2d(ac->time_base);
     }
     
     src_samples = c->frame_size;
@@ -692,7 +679,7 @@ typedef enum AVMediaType AVMediaType;
 }
 
 - (BOOL) Resampler {
-    AVCodecContext *c = audio_st->codec;
+    AVCodecContext *c = ac;//audio_st->codec;
     int ret = 0;
     
     // convert to destination format
@@ -720,15 +707,16 @@ typedef enum AVMediaType AVMediaType;
 
 - (int) WritePacket:(AVStream *)st withPacket:(AVPacket *)pkt {
     int ret = 0;
-    
-    av_packet_rescale_ts(pkt, st->codec->time_base, st->time_base);
+    if (st->codecpar->codec_id == audio_codec_id) {
+        av_packet_rescale_ts(pkt, ac->time_base, st->time_base);
+    }else{
+        av_packet_rescale_ts(pkt, vc->time_base, st->time_base);
+    }
     pkt->stream_index = st->index;
-    //pkt->dts = pkt->pts;
     
     // write the compressed frame to the media file
     [writeLock lock];
-    ret = av_interleaved_write_frame(fmt_context, pkt);
-    
+    ret = av_write_frame(fmt_context, pkt);
     [writeLock unlock];
     return ret;
 }
@@ -767,7 +755,7 @@ typedef enum AVMediaType AVMediaType;
         return NO;
     }
     
-    AVCodecContext *pCodecCtx = video_st->codec;
+    AVCodecContext *pCodecCtx = vc;//video_st->codec;
     /* buffer video source: the decoded frames from the decoder will be inserted here. */
     snprintf(args, sizeof(args),
              "video_size=%dx%d:pix_fmt=%d:time_base=%d/%d:pixel_aspect=%d/%d",
@@ -820,7 +808,7 @@ typedef enum AVMediaType AVMediaType;
     
     NSString* nsfilter_descr = [NSString stringWithFormat:@"movie=%@[wm];[in][wm]overlay=24:24[out]", wmpath];
     
-    NSLog(@"%@",nsfilter_descr);
+    NSLog(@"%@", nsfilter_descr);
     
     if ((ret = avfilter_graph_parse_ptr(filter_graph, [nsfilter_descr UTF8String],
                                         &inputs, &outputs, NULL)) < 0) {

@@ -16,7 +16,10 @@
 #import "YHToastHUD.h"
 #import "YHGPUImageDataHandler.h"
 #import "YHRecordTools.h"
+#import "YHBaseRecord.h"
 #import "YHAVRecord.h"
+#import "YHNAVRecord.h"
+#import "YHRtmpRecord.h"
 
 
 @interface YHFFmpegRecordVC ()<YHGPUImageAudioCameraDelegate,YHGPUImageDataHandlerDelegate,GPUImageVideoCameraDelegate>{
@@ -31,7 +34,7 @@
     int                              videoIndex;
     NSTimer                          *myTimer;
     NSString                         *videoPathUrl;
-    YHAVRecord                       *avRecorder;
+    YHBaseRecord                    *avRecorder;
 }
 @property (weak, nonatomic) IBOutlet GPUImageView *filteredVideoView;
 @property (weak, nonatomic) IBOutlet UIView *viewIndicate;
@@ -100,30 +103,76 @@
 #pragma mark action
 
 - (IBAction)actionCancel:(id)sender {
+    
+    if (_isRecoding) {
+        [self endRecord];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 - (IBAction)actionStartRecord:(id)sender {
+    if (avRecorder) {
+        return;
+    }
+    avRecorder = [[YHAVRecord alloc]init];
+    [avRecorder initParameters];
+    videoPathUrl = video_file_url(@"test");
+    self.isRecoding = YES;
+    [self startRecord];
+
+}
+
+- (IBAction)actionNewApiStartRecord:(UIButton *)sender {
+    if (avRecorder) {
+        return;
+    }
+    avRecorder = [[YHNAVRecord alloc]init];
+    [avRecorder initParameters];
+    videoPathUrl = video_file_url(@"test");
     self.isRecoding = YES;
     [self startRecord];
 }
 
-- (IBAction)actionPauseRecord:(UIButton*)sender {
-    
-
+- (IBAction)actionPush:(UIButton *)sender {
+    if (avRecorder) {
+        return;
+    }
+    avRecorder = [[YHRtmpRecord alloc]init];
+    [avRecorder initParameters];
+    videoPathUrl = @"rtmp://pd6c0503a.live.126.net/live/fe39802e68574db79158364dbb260af5?wsSecret=cb6ade01fcee48b888462a84cc1bb79b&wsTime=1561368140";
+     NSLog(@"new push");
+    self.isRecoding = YES;
+    [self startRecord];
 }
+
 
 - (IBAction)actionStopRecord:(id)sender {
     self.isRecoding = NO;
     [self endRecord];
 }
 
+- (IBAction)actionAddFilter:(id)sender {
+    [videoCamera removeAllTargets];
+    [videoCamera addTarget:beautifyFilter];
+    [beautifyFilter addTarget:_filteredVideoView];
+    [beautifyFilter addTarget:dataHander];
+}
+
+- (IBAction)actionRemoveFilter:(UIButton *)sender {
+    [videoCamera removeAllTargets];
+    [videoCamera addTarget:_filteredVideoView];
+    [videoCamera addTarget:dataHander];
+}
+
 - (void)startRecord{
     
+    if (videoPathUrl == nil || videoPathUrl.length < 5) {
+        [YHToastHUD showToast:@"视频地址无效"];
+    }
     dispatch_sync(_recordQueue, ^{
-        self.isRecoding = [avRecorder startRecord:video_file_url(@"test") withW:720 withH:1280];
+        self.isRecoding = [avRecorder startRecord:videoPathUrl withW:720 withH:1280];
     });
-    
     myTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                                target:self
                                              selector:@selector(updateTimer:)
@@ -139,19 +188,18 @@
 
 - (void)endRecord{
     
-    videoCamera.audioEncodingTarget = nil;
     [myTimer invalidate];
     myTimer = nil;
     
     dispatch_sync(_recordQueue, ^{
         [avRecorder stopRecord];
+        avRecorder = nil;
     });
 }
 
 - (void)createCamera
 {
-    avRecorder = [[YHAVRecord alloc]init];
-    [avRecorder initParameters];
+
     _recordQueue = dispatch_queue_create("com.test.recordQueue", DISPATCH_QUEUE_SERIAL);
     
     videoCamera = [[YHGPUImageAudioCamera alloc] initWithSessionPreset:AVCaptureSessionPreset1280x720 cameraPosition:AVCaptureDevicePositionFront];
@@ -196,9 +244,9 @@
 
 - (void)addTarget{
     _filteredVideoView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
-    [videoCamera addTarget:_filteredVideoView];
-    [videoCamera addTarget:gaussBlurFilter];
-    [gaussBlurFilter addTarget:dataHander];
+    [videoCamera addTarget:beautifyFilter];
+    [beautifyFilter addTarget:_filteredVideoView];
+    [videoCamera addTarget:dataHander];
 }
 
 
