@@ -2,8 +2,8 @@
 https://blog.csdn.net/m0_37677536/article/details/90439399  
 https://blog.csdn.net/m0_37677536/article/details/93216200
 代码内容分为两大模块：
-一.\n
-1.基于GPUImage自定义美颜滤镜\n
+一./n
+1.基于GPUImage自定义美颜滤镜/n
 2.基于GPUImage添加文本水印及动态水印
 3.基于GPUImage视频录制
 4.录制过程中各种滤镜随意切换，及文本水印动态水印随意切换可以加载gif图作为水印
